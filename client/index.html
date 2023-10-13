@@ -36,7 +36,7 @@
         #topBar{
             width: 1000px;
             height: 50px;
-            background-color: #8B8B8B;
+            background-image: url('https://us.123rf.com/450wm/xtockimages/xtockimages1305/xtockimages130500023/19552373-texture-de-m%C3%A9tal-bross%C3%A9.jpg');
             margin-top: 20px;
             display: inline-flex;
             justify-content: space-evenly;
@@ -77,7 +77,9 @@
             margin: auto;
         }
         #screen{
-            display: flex;
+            font-size: 15.5px;
+            text-align: left;
+            display: block;
             background-color: #0997FD;
             border: solid black 3px;
             width: 150px;
@@ -90,6 +92,20 @@
         #screenCont{
             margin: auto;
         }
+        #parkingCont{
+            background-image: url('https://i.pinimg.com/originals/ec/59/6b/ec596b3f594abe172c53c4a390ec7e86.jpg');
+            background-size: cover;
+            width: 1000px;
+            height: 450px;
+            display: inline-flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .captCont{
+            display: block;
+            align-items: center;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -99,28 +115,61 @@
     <div id="fcont">
         <div id="sideBar">
             <table style="height: fit-content; margin: auto; text-align: center;">
-                <tr><td colspan="2"><div id="screen"><span>aaa</span></div></td></tr>
+                <tr><td colspan="2"><div id="screen"><span id="screenContentl1">******INIT******</span><br><span id="screenContentl2">Please wait...</span><br><span id="screenContentl3">@lapatatedouce59</span></div></td></tr>
                 <tr><td><input type="text" id="chpName" placeholder="Nom" class="inputBorne"></td><td><input type="password" id="chpPwd" placeholder="Pass" class="inputBorne"></td></tr>
-                <tr><td colspan="2"><button id="validateChoice" style="background-color: #04D900; width: 50px; height: 50px;"></button></td></tr>
+                <tr><td colspan="2"><button id="validateChoiceBtn" style="background-color: #04d90071; width: 50px; height: 50px;"></button></td></tr>
+                <tr><td colspan="2"><button id="setBtn" style="background-color: #b1b1b171; width: 50px; height: 20px;"></button></td></tr>
             </table>
         </div>
-        <div id="topBar">
-            <div class="voys voyOn" id="voyP1">
-                <span class="voyTxt">01</span>
+        <div>
+            <div id="topBar">
+                <div class="voys voyOn" id="voyP1">
+                    <span class="voyTxt">01</span>
+                </div>
+                <div class="voys voyOn" id="voyP2">
+                    <span class="voyTxt">02</span>
+                </div>
+                <div class="voys voyOn" id="voyP3">
+                    <span class="voyTxt">03</span>
+                </div>
+                <div class="voys voyOn" id="voyP4">
+                    <span class="voyTxt">04</span>
+                </div>
+                <div class="voys voyOn" id="voyP5">
+                    <span class="voyTxt">05</span>
+                </div>
             </div>
-            <div class="voys voyOn" id="voyP2">
-                <span class="voyTxt">02</span>
-            </div>
-            <div class="voys voyOn" id="voyP3">
-                <span class="voyTxt">03</span>
-            </div>
-            <div class="voys voyOn" id="voyP4">
-                <span class="voyTxt">04</span>
-            </div>
-            <div class="voys voyOn" id="voyP5">
-                <span class="voyTxt">05</span>
+            <div id="masterParking">
+                <div id="parkingCont">
+                    <div class="captCont">
+                        <input type="checkbox" id="captTrottP1" name="captTrottP1">
+                        <br>
+                        <span>P1</span>
+                    </div>
+                    <div class="captCont">
+                        <input type="checkbox" id="captTrottP2" name="captTrottP2">
+                        <br>
+                        <span>P2</span>
+                    </div>
+                    <div class="captCont">
+                        <input type="checkbox" id="captTrottP3" name="captTrottP3">
+                        <br>
+                        <span>P3</span>
+                    </div>
+                    <div class="captCont">
+                        <input type="checkbox" id="captTrottP4" name="captTrottP4">
+                        <br>
+                        <span>P4</span>
+                    </div>
+                    <div class="captCont">
+                        <input type="checkbox" id="captTrottP5" name="captTrottP5">
+                        <br>
+                        <span>P5</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <script src="index.js"></script>
 </body>
 </html>
