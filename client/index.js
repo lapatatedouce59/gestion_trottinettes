@@ -30,54 +30,89 @@ window.WebSocket.addEventListener('open', () => {
             if(data.code===401){
                 
             }
+            if(data.code===403){
+                screenShow('dynamic', ['***HTTP ERROR***','Code: 403','Forbidden','***HTTP ERROR***','Error occured in','authentification'],2000)
+            }
         }
         if(data.op===2){
             uuid=data.uuid
+            let parsedJson = data.content
+            data = parsedJson
+            reloadElements()
         }
         if(data.op===3){
+            let parsedJson = data.content
+            data = parsedJson
             reloadElements()
         }
     })
 })
+let sleepProm=false
 function sleep(ms) {
-    return new Promise((resolve) => {
+    let prom = new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
+    sleepProm=prom
+    return prom
+    
 }
 window.WebSocket.addEventListener('close', ()=>{
     screenShow('dynamic', ['***HTTP ERROR***','Code: 504','Timed out','***HTTP ERROR***','Socket is closed','or unreachable'],2000)
 })
 
-let screenInterval=0
+let pauseIntervalVerif={ private: 0, actual: 0, next: 0 }
+
+let screenInterval=[]
 function screenShow(mode, txt, delay=2000){
+    pauseIntervalVerif.private=pauseIntervalVerif.actual
     if(mode==='static'){
-        clearInterval(screenInterval)
+        for(let inter of screenInterval){
+            clearInterval(inter)
+        }
         screenContentl1.innerText=txt[0]
         screenContentl2.innerText=txt[1]
         screenContentl3.innerText=txt[2]
     } else if(mode==='dynamic'){
-        screenInterval=setInterval(async()=>{
-            screenContentl1.innerText=txt[0]
-            screenContentl2.innerText=txt[1]
-            screenContentl3.innerText=txt[2]
-            await sleep(delay/2)
-            screenContentl1.innerText=txt[3]
-            screenContentl2.innerText=txt[4]
-            screenContentl3.innerText=txt[5]
-        },delay)
+        screenInterval.push(setInterval(async()=>{
+            console.log(pauseIntervalVerif)
+            if(pauseIntervalVerif.actual===pauseIntervalVerif.private){
+                screenContentl1.innerText=txt[0]
+                screenContentl2.innerText=txt[1]
+                screenContentl3.innerText=txt[2]
+                await sleep(delay/2)
+                console.log(pauseIntervalVerif)
+                if(pauseIntervalVerif.actual===pauseIntervalVerif.private){
+                    screenContentl1.innerText=txt[3]
+                    screenContentl2.innerText=txt[4]
+                    screenContentl3.innerText=txt[5]
+                } else return;
+            }
+            
+        },delay))
     }
 }
 
-
+for(let elem of document.getElementsByClassName('checkboxCapt')){
+    elem.addEventListener('input',()=>{
+        window.WebSocket.send(JSON.stringify({
+            op: 4,
+            cmd: "CAPT-STATE",
+            args: { id: elem.id.replace('captTrott',''), state: elem.checked },
+            uuid: uuid
+        }))
+    })
+}
 
 function reloadElements(){
+    pauseIntervalVerif.actual++
+
     reloadCapts()
     reloadVoys()
     reloadScreenContent()
 }
 function reloadCapts(){
     for(let place of data.places){
-        document.getElementById(`captTrott${place.id}`).checked=place.capt
+        document.getElementById(`captTrott${place.id}`).checked=place.capt;
     }
 }
 let voyIntervals=[]
@@ -104,17 +139,21 @@ function reloadVoys(){
     }
 }
 function reloadScreenContent(){
-    clearInterval(screenInterval)
-    screenContentl1.innerText=data.screen.screenContentl1
-    screenContentl2.innerText=data.screen.screenContentl2
-    screenContentl3.innerText=data.screen.screenContentl3
+    for(let inter of screenInterval){
+        clearInterval(inter)
+    }
+    if(data.screen.mode==='n'){
+        screenShow('static',[data.screen.screenContentl1,data.screen.screenContentl2,data.screen.screenContentl3])
+    } else if (data.screen.mode==='d'){
+        screenShow('dynamic',[data.screen.screenContentl1,data.screen.screenContentl2,data.screen.screenContentl3,data.screen.screenContentl4,data.screen.screenContentl5,data.screen.screenContentl6],data.screen.delay)
+    }
 }
 
 validateChoiceBtn.addEventListener('click',()=>{
     window.WebSocket.send(JSON.stringify({
         op: 4,
         cmd: "IDENTIFY",
-        args: { name: chpName.ariaValueMax, pwd: chpPwd.value },
+        args: { name: chpName.value, pwd: chpPwd.value },
         uuid: uuid
     }))
     chpName.value=''
